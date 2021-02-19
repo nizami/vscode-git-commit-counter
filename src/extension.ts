@@ -4,7 +4,6 @@ import * as vscode from 'vscode';
 let statusBarItem: vscode.StatusBarItem;
 
 export function activate({ subscriptions }: vscode.ExtensionContext) {
-  if (getGitCommitsCount('midnight') === undefined) return;
   const commandId = 'sample.showAdditionalInfo';
   subscriptions.push(
     vscode.commands.registerCommand(commandId, () => {
@@ -36,20 +35,29 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 }
 
 function updateStatusBarItem(): void {
-  statusBarItem.text = `$(github-alt) ${getGitCommitsCount('midnight')}`;
+  const count = getGitCommitsCount('midnight');
+  if (count === undefined) {
+    statusBarItem.hide();
+    return;
+  }
+  statusBarItem.text = `$(github-alt) ${count}`;
   statusBarItem.tooltip = 'Commits count';
   statusBarItem.show();
 }
 
 function getGitCommitsCount(since = '', until = '') {
   if (!vscode.workspace.workspaceFolders) return;
-  since = since ? `--since="${since}"` : '';
-  until = until ? `--until="${until}"` : '';
-  const author = '--author=$(git config user.email)';
-  const command = `git rev-list --count HEAD ${since} ${until} ${author}`;
-  return execSync(command, {
-    cwd: vscode.workspace.workspaceFolders[0].uri.path,
-  })
-    .toString()
-    .trim();
+  try {
+    since = since ? `--since="${since}"` : '';
+    until = until ? `--until="${until}"` : '';
+    const author = '--author=$(git config user.email)';
+    const command = `git rev-list --count HEAD ${since} ${until} ${author}`;
+    return execSync(command, {
+      cwd: vscode.workspace.workspaceFolders[0].uri.path,
+    })
+      .toString()
+      .trim();
+  } catch (error) {
+    return;
+  }
 }
