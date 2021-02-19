@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 let statusBarItem: vscode.StatusBarItem;
 
 export function activate({ subscriptions }: vscode.ExtensionContext) {
+  if (getGitCommitsCount('midnight') === undefined) return;
   const commandId = 'sample.showAdditionalInfo';
   subscriptions.push(
     vscode.commands.registerCommand(commandId, () => {
