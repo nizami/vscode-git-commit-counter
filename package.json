@@ -10,12 +10,12 @@
     "vscode": "^1.53.0"
   },
   "bugs": {
-    "url": "https://github.com/nizami/git-commit-counter/issues"
+    "url": "https://github.com/nizami/vscode-git-commit-counter/issues"
   },
-  "homepage": "https://github.com/nizami/git-commit-counter#readme",
+  "homepage": "https://github.com/nizami/vscode-git-commit-counter#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nizami/git-commit-counter.git"
+    "url": "https://github.com/nizami/vscode-git-commit-counter.git"
   },
   "keywords": [
     "Git",
@@ -30,6 +30,23 @@
     "*"
   ],
   "main": "./dist/extension",
+  "contributes": {
+    "configuration": [
+      {
+        "title": "Git commit counter",
+        "properties": {
+          "gitCommitCounter.since": {
+            "type": "string",
+            "description": "Since. Check what else: https://github.com/git/git/blob/master/date.c#L1138"
+          },
+          "gitCommitCounter.until": {
+            "type": "string",
+            "description": "Until: Check what else: https://github.com/git/git/blob/master/date.c#L1138"
+          }
+        }
+      }
+    ]
+  },
   "scripts": {
     "compile": "tsc -b",
     "watch": "tsc -b -w",
