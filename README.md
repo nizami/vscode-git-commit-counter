@@ -4,4 +4,6 @@
 
 Shows how many git commit were in the day in status bar
 
-![Show number of selected lines](https://github.com/nizami/vscode-git-commit-counter/raw/master/status-bar.png)
+![Status bar icon](https://github.com/nizami/vscode-git-commit-counter/raw/master/status-bar.png)
+
+![Information popup](https://github.com/nizami/vscode-git-commit-counter/raw/master/select-counter.png)
