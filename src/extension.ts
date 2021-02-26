@@ -5,12 +5,29 @@ let statusBarItem: vscode.StatusBarItem;
 
 export function activate({ subscriptions }: vscode.ExtensionContext) {
   const commandId = 'sample.showAdditionalInfo';
+
+  vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration);
+
   subscriptions.push(
-    vscode.commands.registerCommand(commandId, () => {
-      vscode.window.showInformationMessage(
-        `Today - ${getGitCommitsCount('midnight')},` +
-          `Yesterday - ${getGitCommitsCount('yesterday midnight', 'midnight')}`
+    vscode.commands.registerCommand(commandId, async () => {
+      const today = getGitCommitsCount('midnight');
+      const yesterday = getGitCommitsCount('yesterday midnight', 'midnight');
+
+      const result = await vscode.window.showInformationMessage(
+        `Select git commit counter`,
+        `Today ${today}`,
+        `Yesterday ${yesterday}`
       );
+      console.log(result);
+      if (!result) return;
+      if (result.startsWith('Today')) {
+        await config().update('since', 'midnight');
+        await config().update('until', undefined);
+      } else if (result.startsWith('Yesterday')) {
+        await config().update('since', 'yesterday midnight');
+        await config().update('until', 'midnight');
+      }
+      updateStatusBarItem();
     })
   );
   statusBarItem = vscode.window.createStatusBarItem(
@@ -35,18 +52,27 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 }
 
 function updateStatusBarItem(): void {
-  const count = getGitCommitsCount('midnight');
+  let since = config().get<string>('since') || 'midnight';
+  let until = config().get<string>('until') || '';
+
+  console.log(JSON.stringify({ since, until }, null, 2));
+
+  const count = getGitCommitsCount(since, until);
   if (count === undefined) {
     statusBarItem.hide();
     return;
   }
   statusBarItem.text = `$(github-alt) ${count}`;
-  statusBarItem.tooltip = 'Commits count';
+  statusBarItem.tooltip = Object.entries({ since, until })
+    .filter(([k, v]) => v)
+    .map(([k, v]) => k + ' ' + v)
+    .join(', ');
   statusBarItem.show();
 }
 
 function getGitCommitsCount(since = '', until = '') {
   if (!vscode.workspace.workspaceFolders) return;
+
   try {
     since = since ? `--since="${since}"` : '';
     until = until ? `--until="${until}"` : '';
@@ -58,6 +84,17 @@ function getGitCommitsCount(since = '', until = '') {
       .toString()
       .trim();
   } catch (error) {
-    return;
+    console.log(error);
   }
+}
+
+function onDidChangeConfiguration() {
+  vscode.workspace.onDidChangeConfiguration((e) => {
+    const value: any = config().get('since');
+    console.log(value);
+  });
+}
+
+function config() {
+  return vscode.workspace.getConfiguration('gitCommitCounter');
 }
