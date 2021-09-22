@@ -6,7 +6,7 @@ let statusBarItem: vscode.StatusBarItem;
 export function activate({ subscriptions }: vscode.ExtensionContext) {
   const commandId = 'sample.showAdditionalInfo';
 
-  vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration);
+  // vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration);
 
   subscriptions.push(
     vscode.commands.registerCommand(commandId, async () => {
