@@ -18,7 +18,6 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
         `Today ${today}`,
         `Yesterday ${yesterday}`
       );
-      console.log(result);
       if (!result) return;
       if (result.startsWith('Today')) {
         await config().update('since', 'midnight');
@@ -55,8 +54,6 @@ function updateStatusBarItem(): void {
   let since = config().get<string>('since') || 'midnight';
   let until = config().get<string>('until') || '';
 
-  console.log(JSON.stringify({ since, until }, null, 2));
-
   const count = getGitCommitsCount(since, until);
   if (count === undefined) {
     statusBarItem.hide();
@@ -88,12 +85,12 @@ function getGitCommitsCount(since = '', until = '') {
   }
 }
 
-function onDidChangeConfiguration() {
-  vscode.workspace.onDidChangeConfiguration((e) => {
-    const value: any = config().get('since');
-    console.log(value);
-  });
-}
+// function onDidChangeConfiguration() {
+//   vscode.workspace.onDidChangeConfiguration((e) => {
+//     const value: any = config().get('since');
+//     console.log(value);
+//   });
+// }
 
 function config() {
   return vscode.workspace.getConfiguration('gitCommitCounter');
