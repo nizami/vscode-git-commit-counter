@@ -4,7 +4,7 @@
   "description": "Shows how many commit were in the day",
   "author": "Nizami Amirov",
   "publisher": "nizami",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "license": "MIT",
   "engines": {
     "vscode": "^1.53.0"
