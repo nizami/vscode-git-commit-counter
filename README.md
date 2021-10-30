@@ -5,10 +5,10 @@
 
 Shows how many git commit were in the day in status bar
 
-![Status bar icon](https://github.com/nizami/vscode-git-commit-counter/raw/master/status-bar.png)
+![Status bar](https://raw.githubusercontent.com/nizami/vscode-git-commit-counter/main/status-bar.png)
 
 Also you can choose what counter will be shown.
-![Information popup](https://github.com/nizami/vscode-git-commit-counter/raw/master/select-counter.png)
+![Information popup](https://raw.githubusercontent.com/nizami/vscode-git-commit-counter/main/information-popup.png)
 
 Or add your custom time range in the workspace or user `settings.json`:
 
