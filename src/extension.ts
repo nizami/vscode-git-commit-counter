@@ -10,9 +10,10 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 
   subscriptions.push(
     vscode.commands.registerCommand(commandId, async () => {
+      updateStatusBarItem();
+
       const today = getGitCommitsCount('midnight');
       const yesterday = getGitCommitsCount('yesterday midnight', 'midnight');
-
       const result = await vscode.window.showInformationMessage(
         `Select git commit counter`,
         `Today ${today}`,
@@ -26,7 +27,6 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
         await config().update('since', 'yesterday midnight');
         await config().update('until', 'midnight');
       }
-      updateStatusBarItem();
     })
   );
   statusBarItem = vscode.window.createStatusBarItem(
